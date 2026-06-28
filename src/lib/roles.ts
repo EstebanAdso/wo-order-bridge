@@ -3,10 +3,11 @@
  * Fuente única para guards de acceso y redirecciones tras iniciar sesión.
  */
 
+import type { Route } from "next";
 import type { Rol } from "@/domain/tipos";
 
 /** Ruta del panel principal de cada rol. */
-export const RUTA_PANEL: Record<Rol, string> = {
+export const RUTA_PANEL: Record<Rol, Route> = {
   vendedor: "/vendedor",
   contable: "/contable",
   administrador: "/admin",
