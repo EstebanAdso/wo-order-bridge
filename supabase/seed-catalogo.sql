@@ -1,0 +1,55 @@
+-- ============================================================================
+--  Seed del catálogo (GENERADO automáticamente desde src/data/catalogo.ts).
+--  No editar a mano: ejecutar `npm run seed:catalogo` para regenerar.
+-- ============================================================================
+
+insert into productos (id, codigo, descripcion, categoria, marca, unidad, precio, iva_pct, stock, activo)
+values
+  ('prod-0100178', '0100178', 'Sello mecánico 7 octavos, resorte corto Parxial', 'sellos_mecanicos', 'Parxial', 'UND', 38500, 19, 24, true),
+  ('prod-0100179', '0100179', 'Sello mecánico 7 octavos, resorte largo Parxial', 'sellos_mecanicos', 'Parxial', 'UND', 41200, 19, 18, true),
+  ('prod-0100184', '0100184', 'Sello mecánico 1 pulgada, resorte corto Parxial', 'sellos_mecanicos', 'Parxial', 'UND', 45900, 19, 30, true),
+  ('prod-0100185', '0100185', 'Sello mecánico 1 pulgada, resorte largo Parxial', 'sellos_mecanicos', 'Parxial', 'UND', 48700, 19, 12, true),
+  ('prod-0100190', '0100190', 'Sello mecánico 1 1/4 pulgada cerámica/carbón Burgmann', 'sellos_mecanicos', 'Burgmann', 'UND', 72300, 19, 9, true),
+  ('prod-0100191', '0100191', 'Sello mecánico 1 1/2 pulgada cerámica/carbón Burgmann', 'sellos_mecanicos', 'Burgmann', 'UND', 81500, 19, 7, true),
+  ('prod-0100205', '0100205', 'Sello mecánico tipo cartucho 2 pulgadas John Crane', 'sellos_mecanicos', 'John Crane', 'UND', 198000, 19, 4, true),
+  ('prod-0100206', '0100206', 'Sello mecánico tipo cartucho 2 1/2 pulgadas John Crane', 'sellos_mecanicos', 'John Crane', 'UND', 224500, 19, 3, true),
+  ('prod-0100212', '0100212', 'Empaque de sello mecánico viton 7 octavos', 'sellos_mecanicos', 'Parxial', 'UND', 8900, 19, 60, true),
+  ('prod-0100213', '0100213', 'Empaque de sello mecánico viton 1 pulgada', 'sellos_mecanicos', 'Parxial', 'UND', 9600, 19, 55, true),
+  ('prod-0100220', '0100220', 'Resorte de repuesto para sello mecánico corto inox', 'sellos_mecanicos', 'Parxial', 'UND', 6200, 19, 80, true),
+  ('prod-0100221', '0100221', 'Resorte de repuesto para sello mecánico largo inox', 'sellos_mecanicos', 'Parxial', 'UND', 6800, 19, 75, true),
+  ('prod-0100230', '0100230', 'Kit reparación sello mecánico 1 pulgada Parxial', 'sellos_mecanicos', 'Parxial', 'JGO', 52400, 19, 15, true),
+  ('prod-0100231', '0100231', 'Kit reparación sello mecánico 1 1/2 pulgada Parxial', 'sellos_mecanicos', 'Parxial', 'JGO', 64800, 19, 11, true),
+  ('prod-0100245', '0100245', 'Cara estacionaria carburo de silicio 1 pulgada', 'sellos_mecanicos', 'Burgmann', 'UND', 89500, 19, 6, true),
+  ('prod-0200310', '0200310', 'Capacitor de arranque 88-108 MFD 250V', 'capacitores', 'Mallory', 'UND', 18900, 19, 40, true),
+  ('prod-0200311', '0200311', 'Capacitor de arranque 108-130 MFD 250V', 'capacitores', 'Mallory', 'UND', 19800, 19, 35, true),
+  ('prod-0200312', '0200312', 'Capacitor de arranque 161-193 MFD 250V', 'capacitores', 'Mallory', 'UND', 22400, 19, 28, true),
+  ('prod-0200320', '0200320', 'Capacitor de marcha 5 MFD 370V redondo', 'capacitores', 'Genteq', 'UND', 14500, 19, 50, true),
+  ('prod-0200321', '0200321', 'Capacitor de marcha 7.5 MFD 370V redondo', 'capacitores', 'Genteq', 'UND', 15200, 19, 48, true),
+  ('prod-0200322', '0200322', 'Capacitor de marcha 10 MFD 370V redondo', 'capacitores', 'Genteq', 'UND', 16100, 19, 45, true),
+  ('prod-0200323', '0200323', 'Capacitor de marcha 35 MFD 440V redondo', 'capacitores', 'Genteq', 'UND', 21900, 19, 33, true),
+  ('prod-0200330', '0200330', 'Capacitor dual 35+5 MFD 440V', 'capacitores', 'Genteq', 'UND', 28700, 19, 26, true),
+  ('prod-0200331', '0200331', 'Capacitor dual 40+5 MFD 440V', 'capacitores', 'Genteq', 'UND', 30100, 19, 22, true),
+  ('prod-0200332', '0200332', 'Capacitor dual 45+5 MFD 440V', 'capacitores', 'Genteq', 'UND', 31800, 19, 19, true),
+  ('prod-0200340', '0200340', 'Capacitor dual 50+5 MFD 440V', 'capacitores', 'Genteq', 'UND', 33400, 19, 16, true),
+  ('prod-0200350', '0200350', 'Relé de arranque potencial 110V para compresor', 'capacitores', 'Embraco', 'UND', 12300, 19, 38, true),
+  ('prod-0200351', '0200351', 'Relé de arranque PTC universal nevera', 'capacitores', 'Danfoss', 'UND', 9800, 19, 42, true),
+  ('prod-0300410', '0300410', 'Filtro secador 1/4 soldable 16 g3', 'refrigeracion', 'Danfoss', 'UND', 11200, 19, 60, true),
+  ('prod-0300411', '0300411', 'Filtro secador 3/8 soldable 30 g3', 'refrigeracion', 'Danfoss', 'UND', 14900, 19, 52, true),
+  ('prod-0300420', '0300420', 'Válvula de expansión termostática R-404A 1 TR', 'refrigeracion', 'Danfoss', 'UND', 96500, 19, 10, true),
+  ('prod-0300421', '0300421', 'Válvula de expansión termostática R-134A 2 TR', 'refrigeracion', 'Danfoss', 'UND', 104800, 19, 8, true),
+  ('prod-0300430', '0300430', 'Compresor hermético 1/3 HP R-134A 110V', 'refrigeracion', 'Embraco', 'UND', 285000, 19, 5, true),
+  ('prod-0300431', '0300431', 'Compresor hermético 1/2 HP R-404A 220V', 'refrigeracion', 'Tecumseh', 'UND', 412000, 19, 4, true),
+  ('prod-0300440', '0300440', 'Termostato digital control temperatura -50 a 110°C', 'refrigeracion', 'Full Gauge', 'UND', 68900, 19, 14, true),
+  ('prod-0300441', '0300441', 'Termostato mecánico universal refrigerador', 'refrigeracion', 'Ranco', 'UND', 24600, 19, 27, true),
+  ('prod-0300450', '0300450', 'Gas refrigerante R-134A cilindro 13.6 kg', 'refrigeracion', 'Chemours', 'UND', 245000, 19, 9, true),
+  ('prod-0300451', '0300451', 'Gas refrigerante R-404A cilindro 10.9 kg', 'refrigeracion', 'Chemours', 'UND', 318000, 19, 6, true),
+  ('prod-0300460', '0300460', 'Tubería capilar cobre 0.031 rollo 30 m', 'refrigeracion', 'Mueller', 'RLL', 42800, 19, 18, true),
+  ('prod-0300461', '0300461', 'Tubería de cobre flexible 1/4 rollo 15 m', 'refrigeracion', 'Mueller', 'RLL', 78500, 19, 13, true),
+  ('prod-0300470', '0300470', 'Ventilador axial condensador 110V 1/20 HP', 'refrigeracion', 'Elco', 'UND', 89400, 19, 11, true),
+  ('prod-0300471', '0300471', 'Aspas para ventilador condensador 5 paletas 14 pulg', 'refrigeracion', 'Elco', 'UND', 21500, 19, 23, true),
+  ('prod-0300480', '0300480', 'Presostato de alta y baja R-404A ajustable', 'refrigeracion', 'Danfoss', 'UND', 112000, 19, 7, true)
+on conflict (id) do update set
+  descripcion = excluded.descripcion,
+  precio      = excluded.precio,
+  stock       = excluded.stock,
+  activo      = excluded.activo;

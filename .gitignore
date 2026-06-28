@@ -1,0 +1,51 @@
+# Dependencias
+/node_modules
+/.pnp
+.pnp.*
+
+# Build / Next.js
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# Variables de entorno (datos sensibles: NUNCA versionar)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Supabase (claves y estado local)
+/supabase/.branches
+/supabase/.temp
+.supabase/
+
+# Cobertura de pruebas
+/coverage
+
+# Vercel
+.vercel
+
+# Credenciales de Gmail / Google (OAuth)
+credentials/
+*.pem
+google-credentials.json
+token.json
+
+
+docs
