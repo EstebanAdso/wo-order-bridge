@@ -20,10 +20,18 @@ export function obtenerClienteWorldOffice(): ClienteWorldOffice {
   const empresaId = process.env.WORLDOFFICE_EMPRESA_ID ?? "EMPRESA-DEMO";
 
   if (modo === "live") {
+    const num = (clave: string) => Number(process.env[clave] ?? 0);
     instancia = new ClienteWorldOfficeLive({
-      baseUrl: process.env.WORLDOFFICE_API_BASE_URL ?? "",
+      baseUrl:
+        process.env.WORLDOFFICE_API_BASE_URL ?? "https://api.worldoffice.cloud/api/v1",
       token: process.env.WORLDOFFICE_API_TOKEN ?? "",
-      empresaId,
+      idEmpresa: num("WORLDOFFICE_ID_EMPRESA"),
+      idTerceroInterno: num("WORLDOFFICE_ID_TERCERO_INTERNO"),
+      idFormaPago: num("WORLDOFFICE_ID_FORMA_PAGO"),
+      idMoneda: num("WORLDOFFICE_ID_MONEDA"),
+      idBodega: num("WORLDOFFICE_ID_BODEGA"),
+      documentoTipo: process.env.WORLDOFFICE_DOCTIPO_FACTURA ?? "FV",
+      documentoTipoPedido: process.env.WORLDOFFICE_DOCTIPO_PEDIDO ?? "PD",
     });
   } else {
     instancia = new ClienteWorldOfficeMock(empresaId);

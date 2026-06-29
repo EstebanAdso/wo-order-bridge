@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import type { Producto } from "@/domain/tipos";
 import { requerirRol } from "@/lib/auth/sesion";
 import { obtenerRepositorio } from "@/lib/datos";
+import { obtenerNotificador } from "@/lib/notificaciones";
 
 /** Busca productos por descripción o código (lo llama el buscador en vivo). */
 export async function buscarProductosAccion(termino: string): Promise<Producto[]> {
@@ -42,6 +43,16 @@ export async function crearOrdenAccion(
     estado: datos.estado,
     lineas: datos.lineas,
   });
+
+  // Al generar un pedido, avisa al área contable por correo. No bloquea la
+  // respuesta al vendedor si el correo falla: se registra y se continúa.
+  if (orden.estado === "pedido") {
+    try {
+      await obtenerNotificador().notificarPedidoNuevo(orden);
+    } catch (e) {
+      console.error("No se pudo notificar al área contable:", e);
+    }
+  }
 
   revalidatePath("/vendedor");
   return {

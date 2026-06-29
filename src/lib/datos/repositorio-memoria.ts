@@ -146,6 +146,7 @@ export class RepositorioMemoria implements Repositorio {
       vendedorNombre: vendedor.nombre,
       clienteId: cliente.id,
       clienteNombre: cliente.nombre,
+      clienteNit: cliente.nit,
       lineas,
       subtotal: totales.subtotal,
       descuentoTotal: totales.descuentoTotal,

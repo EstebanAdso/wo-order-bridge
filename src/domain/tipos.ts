@@ -107,6 +107,7 @@ export interface Orden {
   vendedorNombre: string;
   clienteId: string;
   clienteNombre: string;
+  clienteNit: string; // NIT congelado; es la identificación del tercero en World Office
   lineas: LineaOrden[];
   subtotal: number; // suma de líneas sin IVA, antes de descuento
   descuentoTotal: number;

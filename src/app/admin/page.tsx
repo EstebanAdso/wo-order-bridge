@@ -1,4 +1,5 @@
 import { ETIQUETAS_CATEGORIA } from "@/data/catalogo";
+import { EnlaceEstructuraWO } from "@/components/EnlaceEstructuraWO";
 import { TablaOrdenes } from "@/components/TablaOrdenes";
 import { requerirRol } from "@/lib/auth/sesion";
 import { obtenerRepositorio } from "@/lib/datos";
@@ -93,7 +94,11 @@ export default async function PaginaAdmin() {
         <h2 className="text-lg font-semibold text-slate-900">
           Todas las órdenes
         </h2>
-        <TablaOrdenes ordenes={ordenes} mostrarVendedor />
+        <TablaOrdenes
+          ordenes={ordenes}
+          mostrarVendedor
+          accion={(o) => <EnlaceEstructuraWO ordenId={o.id} />}
+        />
       </section>
     </div>
   );

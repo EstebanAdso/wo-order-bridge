@@ -63,7 +63,7 @@ export function construirPayloadWorldOffice(
     empresaId,
     fecha: orden.creadaEn.slice(0, 10),
     tercero: {
-      identificacion: orden.clienteId, // se resuelve a NIT real en fase live
+      identificacion: orden.clienteNit, // NIT del tercero en World Office
       nombre: orden.clienteNombre,
     },
     vendedor: {
