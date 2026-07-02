@@ -1,8 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { obtenerRepositorio } from "@/lib/datos";
-import { iniciarSesion } from "@/lib/auth/sesion";
+import { autenticar } from "@/lib/auth/sesion";
 import { RUTA_PANEL } from "@/lib/roles";
 
 /** Resultado del intento de inicio de sesión (para mostrar error en el form). */
@@ -25,11 +24,10 @@ export async function accionIniciarSesion(
     return { error: "Ingresa correo y contraseña." };
   }
 
-  const usuario = await obtenerRepositorio().validarCredenciales(email, clave);
+  const usuario = await autenticar(email, clave);
   if (!usuario) {
     return { error: "Correo o contraseña incorrectos." };
   }
 
-  await iniciarSesion(usuario.id);
   redirect(RUTA_PANEL[usuario.rol]);
 }

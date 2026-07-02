@@ -10,6 +10,7 @@
  */
 
 import { RepositorioMemoria } from "./repositorio-memoria";
+import { RepositorioSupabase } from "./repositorio-supabase";
 import type { Repositorio } from "./repositorio";
 
 let instancia: Repositorio | null = null;
@@ -20,14 +21,19 @@ export function obtenerRepositorio(): Repositorio {
   const modo = process.env.DATA_MODE ?? "demo";
 
   switch (modo) {
-    // case "supabase":
-    //   instancia = new RepositorioSupabase();  // producción (Fase de integración)
-    //   break;
+    case "supabase":
+      instancia = new RepositorioSupabase();
+      break;
     default:
       instancia = new RepositorioMemoria();
   }
 
   return instancia;
+}
+
+/** True si la plataforma corre contra Supabase (persistencia + Auth reales). */
+export function esModoSupabase(): boolean {
+  return (process.env.DATA_MODE ?? "demo") === "supabase";
 }
 
 export type { Repositorio } from "./repositorio";
