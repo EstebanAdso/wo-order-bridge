@@ -13,6 +13,27 @@ export async function buscarProductosAccion(termino: string): Promise<Producto[]
   return obtenerRepositorio().buscarProductos(termino);
 }
 
+/**
+ * Consulta la disponibilidad EN VIVO de varios códigos contra World Office.
+ * Devuelve un mapa código → disponible. Si World Office falla, devuelve un mapa
+ * vacío y el buscador cae al stock almacenado (no rompe la búsqueda).
+ */
+export async function consultarDisponibilidadAccion(
+  codigos: string[],
+): Promise<Record<string, number>> {
+  await requerirRol("vendedor");
+  if (codigos.length === 0) return {};
+  try {
+    const inventario = await obtenerClienteWorldOffice().consultarInventario(
+      codigos,
+    );
+    return Object.fromEntries(inventario.map((i) => [i.codigo, i.disponible]));
+  } catch (e) {
+    console.error("No se pudo consultar inventario en vivo:", e);
+    return {};
+  }
+}
+
 export interface DatosNuevaOrden {
   clienteId: string;
   estado: "cotizacion" | "pedido";

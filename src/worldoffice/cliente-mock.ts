@@ -7,6 +7,7 @@
  * habría enviado, igual que hará la implementación live.
  */
 
+import { CATALOGO } from "@/data/catalogo";
 import type { Orden } from "@/domain/tipos";
 import type {
   ClienteWorldOffice,
@@ -57,12 +58,15 @@ export class ClienteWorldOfficeMock implements ClienteWorldOffice {
   async consultarInventario(codigos: string[]): Promise<InventarioVivo[]> {
     await simularLatencia(200);
     const ahora = new Date().toISOString();
-    // En mock, el inventario "en vivo" lo resuelve la capa de datos local.
-    // Aquí devolvemos un valor determinístico por código para la demo.
-    return codigos.map((codigo) => ({
-      codigo,
-      disponible: 10 + (Number(codigo.slice(-2)) || 0),
-      consultadoEn: ahora,
-    }));
+    // En mock, la disponibilidad "en vivo" refleja el stock del catálogo
+    // semilla, para que la demo sea coherente con lo que ve el vendedor.
+    return codigos.map((codigo) => {
+      const producto = CATALOGO.find((p) => p.codigo === codigo);
+      return {
+        codigo,
+        disponible: producto?.stock ?? 0,
+        consultadoEn: ahora,
+      };
+    });
   }
 }

@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Producto } from "@/domain/tipos";
-import { buscarProductosAccion } from "@/app/vendedor/acciones";
+import {
+  buscarProductosAccion,
+  consultarDisponibilidadAccion,
+} from "@/app/vendedor/acciones";
 import { formatearPesos } from "@/lib/formato";
 
 interface Props {
@@ -18,6 +21,8 @@ export function BuscadorProductos({ onAgregar }: Props) {
   const [termino, setTermino] = useState("");
   const [resultados, setResultados] = useState<Producto[]>([]);
   const [cargando, setCargando] = useState(false);
+  // Disponibilidad en vivo (World Office) por código; null = aún consultando.
+  const [disponibles, setDisponibles] = useState<Record<string, number>>({});
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -25,8 +30,18 @@ export function BuscadorProductos({ onAgregar }: Props) {
     if (temporizador.current) clearTimeout(temporizador.current);
     temporizador.current = setTimeout(async () => {
       setCargando(true);
-      setResultados(await buscarProductosAccion(termino));
+      const encontrados = await buscarProductosAccion(termino);
+      setResultados(encontrados);
+      setDisponibles({});
       setCargando(false);
+
+      // Consulta la disponibilidad en vivo de lo mostrado (no bloquea la lista).
+      if (encontrados.length > 0) {
+        const mapa = await consultarDisponibilidadAccion(
+          encontrados.map((p) => p.codigo),
+        );
+        setDisponibles(mapa);
+      }
     }, 250);
     return () => {
       if (temporizador.current) clearTimeout(temporizador.current);
@@ -50,30 +65,48 @@ export function BuscadorProductos({ onAgregar }: Props) {
           <p className="p-3 text-sm text-slate-400">Sin resultados.</p>
         ) : (
           <ul className="divide-y divide-slate-100">
-            {resultados.map((p) => (
-              <li
-                key={p.id}
-                className="flex items-center justify-between gap-3 p-3 hover:bg-slate-50"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-slate-800">
-                    {p.descripcion}
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    <span className="font-mono">{p.codigo}</span> ·{" "}
-                    {formatearPesos(p.precio)} · stock {p.stock}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => onAgregar(p)}
-                  disabled={p.stock <= 0}
-                  className="shrink-0 rounded-md bg-green-700 px-3 py-1 text-xs font-medium text-white transition hover:bg-green-800 disabled:opacity-40"
+            {resultados.map((p) => {
+              // Disponibilidad en vivo de World Office; si aún no llega, usa el
+              // stock almacenado como valor provisional.
+              const enVivo = disponibles[p.codigo];
+              const disponible = enVivo ?? p.stock;
+              return (
+                <li
+                  key={p.id}
+                  className="flex items-center justify-between gap-3 p-3 hover:bg-slate-50"
                 >
-                  Agregar
-                </button>
-              </li>
-            ))}
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-slate-800">
+                      {p.descripcion}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      <span className="font-mono">{p.codigo}</span> ·{" "}
+                      {formatearPesos(p.precio)} ·{" "}
+                      {enVivo === undefined ? (
+                        <span title="Consultando World Office…">
+                          stock {p.stock}
+                        </span>
+                      ) : (
+                        <span
+                          className="text-green-700"
+                          title="Disponibilidad en vivo desde World Office"
+                        >
+                          disponible {enVivo} (en vivo)
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onAgregar(p)}
+                    disabled={disponible <= 0}
+                    className="shrink-0 rounded-md bg-green-700 px-3 py-1 text-xs font-medium text-white transition hover:bg-green-800 disabled:opacity-40"
+                  >
+                    Agregar
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
