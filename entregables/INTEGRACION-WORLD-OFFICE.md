@@ -84,7 +84,14 @@ Todos cuelgan de `https://api.worldoffice.cloud/api/v1`.
 | Eliminar documento | `DELETE` | `/documentos/eliminar/{id}` | Anular si hace falta. |
 | Inventario | `GET` | `/inventario/listar` | Disponibilidad y `idInventario` por ítem. |
 | Terceros | `GET` | `/terceros/buscar` | Resuelve el cliente (NIT → `idTerceroExterno`). |
+| Buscar por referencia | `GET` | `/documentos/buscarPorReferencia` | Idempotencia: evita duplicar un pedido ya creado. |
 | Tipos de documento | `GET` | (servicio "listar tipos de documento") | Confirma el código `documentoTipo` de pedido y factura. |
+
+> **Rutas configurables:** las rutas cuyo nombre exacto se confirma contra la
+> cuenta real (`documentoVenta`, `inventario`, `terceros`, `buscarDocumento`) se
+> leen de variables de entorno (`WORLDOFFICE_RUTA_*`). Confirmar la integración =
+> cambiar `.env`, **sin tocar el código**. Los valores por defecto están en
+> `RUTAS_WO_DEFECTO` (`cliente-live.ts`).
 
 El tipo de documento (`documentoTipo`) usa códigos: `"FV"` para **factura de
 venta**; el de **pedido** se confirma con el servicio de tipos de documento (en
@@ -197,17 +204,29 @@ El inventario que ve el vendedor se consulta con `consultarInventario(codigos)`
 
 ## 7. Robustez: errores, idempotencia y reintentos
 
-- **Errores HTTP:** `cliente-live.ts` ya devuelve `ok:false` con el código y el
-  cuerpo de la respuesta para mostrar/registrar el problema, sin romper la app.
-- **Idempotencia:** se envía `referenciaExterna` (nuestro consecutivo). Antes de
-  reintentar un pedido, se consulta si ya existe un documento con esa referencia
-  para **no duplicar**. (A confirmar si World Office soporta clave de
-  idempotencia nativa.)
-- **Reintentos:** ante errores transitorios (5xx, timeouts) se reintenta con
-  backoff exponencial corto (p. ej. 1s, 3s, 9s; máximo 3 intentos).
-- **Rate limits:** si World Office responde `429`, se respeta `Retry-After`.
-- **Registro:** cada envío guarda el `payloadEnviado` (ya está en
-  `ResultadoWorldOffice`) para auditoría.
+Toda la robustez de red vive en `src/worldoffice/http-wo.ts` (`HttpWorldOffice`),
+que `cliente-live.ts` usa para **todas** sus llamadas. Ya está implementado:
+
+- **Timeout:** cada petición se aborta con `AbortController` a los
+  `WORLDOFFICE_TIMEOUT_MS` (def. 15 s) para que una llamada colgada no bloquee el
+  pedido.
+- **Reintentos con backoff:** ante errores transitorios (5xx, `429`, red/timeout)
+  se reintenta con backoff exponencial (1 s, 3 s, 9 s), hasta
+  `WORLDOFFICE_MAX_REINTENTOS` (def. 3). Los errores no transitorios (4xx) se
+  propagan sin reintentar.
+- **Rate limits:** si World Office responde `429`, se respeta la cabecera
+  `Retry-After`.
+- **Idempotencia:** antes de crear un pedido, `buscarDocumentoExistente()`
+  consulta por `referenciaExterna` (nuestro consecutivo); si ya existe, devuelve
+  ese id y **no duplica**. Si el servicio de búsqueda no está disponible, no
+  bloquea el envío.
+- **Pedido → factura sin duplicar:** `convertirEnFactura()` reutiliza el
+  `worldOfficeDocId` del pedido y **edita** ese documento a factura, en lugar de
+  crear uno nuevo.
+- **Errores HTTP:** `cliente-live.ts` devuelve `ok:false` con código y cuerpo
+  (`ErrorWorldOffice`) para mostrar/registrar el problema sin romper la app.
+- **Registro:** cada envío guarda el `payloadEnviado` (en `ResultadoWorldOffice`)
+  para auditoría.
 
 ---
 
@@ -277,6 +296,7 @@ al modo consola. No hay que tocar código.
 
 Implementación en el repositorio:
 - `src/worldoffice/contrato.ts` — interfaz que consume la app.
-- `src/worldoffice/cliente-live.ts` — llamadas HTTP reales (endpoints, auth WO).
+- `src/worldoffice/cliente-live.ts` — llamadas reales (endpoints, mapeo, idempotencia).
+- `src/worldoffice/http-wo.ts` — transporte robusto (timeout, backoff, Retry-After).
 - `src/worldoffice/mapeo-wo.ts` + `tipos-wo.ts` — cuerpo real de World Office.
 - `src/worldoffice/payload.ts` — estructura neutra descargable.
